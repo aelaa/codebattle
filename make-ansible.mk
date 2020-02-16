@@ -2,7 +2,7 @@ ansible-deps-install:
 	ansible-galaxy install -r requirements.yml
 
 setup-env:
-	docker run  -v $(CURDIR):/app -w /app williamyeh/ansible:ubuntu18.04 ansible-playbook ansible/development.yml -i ansible/development -vv
+	docker run -v $(CURDIR):/app -w /app williamyeh/ansible:ubuntu18.04 ansible-playbook ansible/development.yml -i ansible/development -vv
 
 ansible-edit-secrets:
 	ansible-vault edit --vault-password-file tmp/ansible-vault-password ansible/production/group_vars/all/vault.yml
