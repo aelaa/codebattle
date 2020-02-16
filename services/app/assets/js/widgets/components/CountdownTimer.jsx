@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+import { differenceInMilliseconds, format } from 'date-fns';
 import PropTypes from 'prop-types';
 
-// Countdown
 class CountdownTimer extends Component {
   static propTypes = {
     time: PropTypes.string.isRequired,
@@ -10,8 +9,10 @@ class CountdownTimer extends Component {
 
   constructor(props) {
     super(props);
+    const { time, timeoutSeconds } = props;
+    const timeLeft = this.getTimeLeft(time, timeoutSeconds);
     this.state = {
-      duration: moment().format('HH:mm:ss'),
+      duration: this.formatTime(timeLeft),
     };
   }
 
@@ -23,15 +24,20 @@ class CountdownTimer extends Component {
     clearInterval(this.interval);
   }
 
+  getTimeLeft = (time, timeoutSeconds) => {
+    const diff = differenceInMilliseconds(new Date(), new Date(time));
+    const timeoutMiliseconds = timeoutSeconds * 1000;
+    return Math.max(timeoutMiliseconds - diff, 0);
+  }
+
+  formatTime = t => format(new Date(t), 'HH:mm:ss')
+
   updateTimer = () => {
     const { time, timeoutSeconds } = this.props;
-
-    const diff = moment().diff(moment.utc(time));
-    const timeoutMiliseconds = timeoutSeconds * 1000;
-    const timeLeft = Math.max(timeoutMiliseconds - diff, 0);
+    const timeLeft = this.getTimeLeft(time, timeoutSeconds);
 
     this.setState({
-      duration: moment.utc(timeLeft).format('HH:mm:ss'),
+      duration: this.formatTime(timeLeft),
     });
   }
 
