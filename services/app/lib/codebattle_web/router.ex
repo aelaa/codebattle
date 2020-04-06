@@ -46,6 +46,7 @@ defmodule CodebattleWeb.Router do
   scope "/", CodebattleWeb do
     # Use the default browser stack
     pipe_through(:browser)
+    get("/robots.txt", PageController, :robots)
 
     resources("/session", SessionController, singleton: true, only: [:delete])
     get("/", PageController, :index)
