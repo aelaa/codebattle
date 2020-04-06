@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -44,6 +45,9 @@ const productionPlugins = [
       preset: ['default', { discardComments: { removeAll: true } }],
     },
     canPrint: true,
+  }),
+  new TerserPlugin({
+    test: /\.js/g,
   }),
 ];
 
