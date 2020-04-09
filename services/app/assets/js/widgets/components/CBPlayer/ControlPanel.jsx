@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import { PlayerIcon } from 'react-player-controls';
-import cn from 'classnames';
+import Dropdown, { MenuItem } from './ControlPanel/DropDown/index';
 
 const ControlPanel = ({
   onPlayClick, onPauseClick, defaultSpeed, setSpeed, hasStopped, children,
 }) => {
   const [mode, setMode] = useState('pause');
   const [speedMode, setSpeedMode] = useState('normal');
-
-  const speedControlClassNames = cn('btn btn-sm border rounded ml-4', {
-    'btn-light': speedMode === 'normal',
-    'btn-secondary': speedMode === 'fast',
-  });
 
   const onControlButtonClick = () => {
     switch (mode) {
@@ -28,15 +23,15 @@ const ControlPanel = ({
     }
   };
 
-  const onChangeSpeed = () => {
-    switch (speedMode) {
-      case 'normal':
-        setSpeed(defaultSpeed / 2);
-        setSpeedMode('fast');
-        break;
+  const onChangeSpeed = speedMode2 => {
+    switch (speedMode2) {
       case 'fast':
+        setSpeed(defaultSpeed / 2);
+        setSpeedMode(speedMode2);
+        break;
+      case 'normal':
         setSpeed(defaultSpeed);
-        setSpeedMode('normal');
+        setSpeedMode(speedMode2);
         break;
       default:
         break;
@@ -57,7 +52,30 @@ const ControlPanel = ({
         )}
       </button>
       {children}
-      <button type="button" className={speedControlClassNames} onClick={onChangeSpeed}>x2</button>
+
+      <Dropdown dropup className="ml-3">
+        <Dropdown.Toggle btnSize="lg"><i className="fa fa-cog" /></Dropdown.Toggle>
+        <Dropdown.Menu>
+          <MenuItem>
+            { `Speed: ${speedMode}` }
+            <MenuItem
+              active={speedMode === 'normal'}
+              onSelect={() => onChangeSpeed('normal')}
+            >
+              <i className="fa fa-play mr-2" />
+              normal
+            </MenuItem>
+            <MenuItem
+              active={speedMode === 'fast'}
+              onSelect={() => onChangeSpeed('fast')}
+            >
+              <i className="fa fa-forward mr-2" />
+              fast
+            </MenuItem>
+          </MenuItem>
+        </Dropdown.Menu>
+      </Dropdown>
+
     </>
   );
 };
